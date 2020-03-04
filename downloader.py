@@ -5,8 +5,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 import os
 
-baseurl = "https://vidstreaming.io"
-start_url = "https://vidstreaming.io/videos/orange-episode-13"
+baseurl = ""
+start_url = ""
 temp = start_url.split("/")
 temp = start_url.split("/")
 endInd = temp[-1].find("-episode")
@@ -80,7 +80,7 @@ def download(downloadLinks):
             print(Exception)
 
 def makeFolder():
-    parent_dir = r'C:\Users\Mark\Desktop'
+    parent_dir = ''
     path = os.path.join(parent_dir, anime) 
     try: 
         os.makedirs(path, exist_ok = True) 
