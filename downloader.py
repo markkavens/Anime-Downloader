@@ -25,7 +25,7 @@ def getAllepisodes():
     #print(episodeUL)
     for link in episodeUL:
         #print(link['href'])
-        episodes.append(link['href'])
+        episodes.insert(1,link['href'])
     return episodes
 
 # get vidstreaming streaming window links
@@ -35,10 +35,11 @@ def getDownloadLinks():
     for episode in episodes:
         if episode == "0":
             continue
+        print(episode)
         url = baseurl + episode
         soup = connection(url)
         iframeLink = "https:"+soup.find('iframe').attrs['src'] # search iframe
-        #print(iframeLink)
+        print(iframeLink)
         links.append(iframeLink)
     return links
 
@@ -54,8 +55,14 @@ def realDownloadLinks():
         driver.implicitly_wait(1)
         driver.get(sites_of_links[i])
         videoQualityList = driver.execute_script('return playerInstance.getPlaylist()[0].allSources')
-        print(i," => ",videoQualityList[0]['file'])
-        finalLinks.append(videoQualityList[0]['file'])
+        if len(videoQualityList) > 1:
+            for j in range(len(videoQualityList)):
+                if videoQualityList[j]['label'] == "Auto":
+                    videoQualityList.remove(videoQualityList[j])
+                    break
+
+        print(i," => ",videoQualityList)
+        finalLinks.append(videoQualityList)
     driver.close()
     return finalLinks
 
@@ -65,28 +72,35 @@ def download(downloadLinks):
     print("here")
     for i in range(1,len(downloadLinks)):
         filename=""
+        episode = downloadLinks[i]
         try:
-            site = requests.get(downloadLinks[i],stream=True)
-            filename = dir_name +  r"\Episode-" + str(i) + ".mp4"
-            print(filename)
-            print("download started")
-            with open(filename, 'wb') as f: 
-                for chunk in site.iter_content(chunk_size = 1024*1024): 
-                    if chunk: 
-                        f.write(chunk)
-            print("Episode-",i," downloaded successfully !!\n")
+            for j in range(len(episode)): ## incomplete
+                status = False  # to check if the download is done or not
+                file = episode[j]['file']
+                quality = episode[j]['label']
+                site = requests.get(file,stream=True)
+                filename = dir_name +  r"\Episode-" + str(i) + quality +".mp4"
+                print(site.headers) ## size in bytes
+                print("download started")
+                with open(filename, 'wb') as f: 
+                    for chunk in site.iter_content(chunk_size = 1024*1024): 
+                        if chunk: 
+                            f.write(chunk)
+                print("Episode-",i," downloaded successfully !!\n")
+                if status == True:  ## incomplete
+                    break
         except Exception:
             print("**ERROR OCCURED IN EPISODE- **",i)
             print(Exception)
 
 def makeFolder():
-    parent_dir = ''
+    parent_dir = r''
     path = os.path.join(parent_dir, anime) 
     try: 
         os.makedirs(path, exist_ok = True) 
-        print("Directory '%s' created successfully" % anime) 
+        print("Folder '%s' created successfully" % anime) 
     except OSError as error: 
-        print("Directory '%s' can not be created" % anime,"\n",error)
+        print("Folder '%s' can not be created" % anime,"\n",error)
     return path 
 
 if __name__ == "__main__": 
