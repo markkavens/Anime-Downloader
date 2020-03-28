@@ -7,11 +7,8 @@ from sys import exit
 import os
 from progress.bar import IncrementalBar
 
-# null = open(os.devnull,'wb')
-# sys.stderr = null
 baseurl = "https://vidstreaming.io/"
 episodes=["0"]
-#chromedriverLoc = str(r'\Desktop\AnimeDownloader\chromedriver.exe')
 
 
 def getanimename(start_url):
@@ -118,7 +115,6 @@ def download(downloadLinks,start_url):
                     print( "Episode-"+str(i)+"-",str(quality)+".mp4 already exsists")
                     break
                 print("\nEpisode ",str(i),"\nFilesize",round(filesize/(1024*1024),2) ,"MB\n",quality) ## size in bytes
-                #with tqdm(total=(filesize/(1024*1024)),unit='MB') as pbar:
                 chunksize = int((1024*1024)/2)
                 with IncrementalBar(message="Downloading ",max=(filesize/chunksize),suffix='%(percent).1f%% - Time left %(eta_td)s') as bar:
                     with open(filename, 'wb') as f: 
