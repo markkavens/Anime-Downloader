@@ -43,8 +43,13 @@ def connection(url):
 
 def tobedownloaded(url,l,r):
     ep = url.split('-')
-    if int(ep[-1]) in range(l,r+1):
-        return ep[-1]
+    if len(ep)>0 : 
+        if ep[-1].isnumeric():
+            if int(ep[-1]) in range(l,r+1):
+                return ep[-1]
+        else: 
+            if 0 in range(l,r+1):
+                return "0"
     return -1
 
 # get the episode list ...
@@ -79,20 +84,25 @@ def getPlayerLinks(url,l,r):
 
 # get final download links ... 
 def realDownloadLinks(url,episodes):
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--log-level=3")
-    driver = webdriver.Chrome(chrome_options=chrome_options)
+    try:
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--log-level=3")
+        driver = webdriver.Chrome(chrome_options=chrome_options)
+    except Exception as e:
+        print("Update your chrome driver with the Google Chrome version")
+        exit()
+
     print("Preparing Download . . . Wait . . this might take time \n")
     for ep in episodes:
         try:
             driver.set_page_load_timeout(25)
             driver.get(ep.playerLink)
         except Exception as e:
-            print(e)
+            print("Connection Timeout :(")
             continue
         try:
-            videoQualityList = driver.execute_script('return playerInstance.getPlaylist()[0].allSources')
+            videoQualityList = driver.execute_script('return jwplayer().getPlaylist()[0].allSources')
             if len(videoQualityList) != 0:
                 print("Links found episode",ep.number)
                 x = []
@@ -104,8 +114,9 @@ def realDownloadLinks(url,episodes):
                         x.append(dct)
 
             ep.setLinks(x)     # list of all episodes with all qualities
-        except :
-            print("Something unexpected occured in episode",ep.num)
+        except Exception as e:
+            print(e)
+            print("Something unexpected occured in episode",ep.number)
             continue
     driver.close()
 
@@ -167,7 +178,7 @@ def printInfo(no,size,quality):
 
 def makeFolder(anime):
     parent_dir = r''
-    path = os.path.join(parent_dir, anime) 
+    path = os.path.join(parent_dir, anime.capitalize()) 
     try: 
         os.makedirs(path, exist_ok = True) 
         print("Folder '%s' created successfully\n" % anime) 
@@ -182,7 +193,19 @@ def checkurl(url):
         return True
     return False
 
+def into():
+    print('''
+        
+ █████  ███    ██ ██ ███    ███ ███████     ██████  ███    ██ ███████     ██████ ██      ██  ██████ ██   ██     
+██   ██ ████   ██ ██ ████  ████ ██         ██    ██ ████   ██ ██         ██      ██      ██ ██      ██  ██      
+███████ ██ ██  ██ ██ ██ ████ ██ █████      ██    ██ ██ ██  ██ █████      ██      ██      ██ ██      █████       
+██   ██ ██  ██ ██ ██ ██  ██  ██ ██         ██    ██ ██  ██ ██ ██         ██      ██      ██ ██      ██  ██      
+██   ██ ██   ████ ██ ██      ██ ███████     ██████  ██   ████ ███████     ██████ ███████ ██  ██████ ██   ██     
+                                                                                                              
+    ''')
+
 def main():
+    into()
     print("\n ** Curse Saransh Pushkar , if doesnt work **\n")
     print(" ** Follow the link >>>> ",baseurl,"\n ** Search the anime\n ** Copy the url and paste below :")
     start_url = input()
@@ -202,7 +225,13 @@ def main():
             print("Error")
     else :
         print("Invalid URL")
+
+    x=input()
     
 
 if __name__ == "__main__":
     main()
+
+
+    
+                                                                                                                  
