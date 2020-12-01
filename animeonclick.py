@@ -23,7 +23,7 @@ from sys import exit
 import os
 from progress.bar import IncrementalBar
 
-baseurl = "https://vidstreaming.io/"
+baseurl = "https://gogo-stream.com/"
 
 def getanimename(start_url):
     temp = start_url.split("/")
@@ -88,7 +88,7 @@ def realDownloadLinks(url,episodes):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--log-level=3")
-        driver = webdriver.Chrome(chrome_options=chrome_options)
+        driver = webdriver.Chrome(options=chrome_options)
     except Exception as e:
         print("Update your chrome driver with the Google Chrome version")
         exit()
