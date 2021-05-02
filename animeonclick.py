@@ -22,8 +22,15 @@ from selenium.webdriver.common.keys import Keys
 from sys import exit
 import os
 from progress.bar import IncrementalBar
+import chromedriver_autoinstaller
 
-baseurl = "https://gogo-stream.com/"
+baseurl = "https://www.vidstreaming.io/" 
+#baseurl = "https://gogo-stream.com/"
+
+def error(message):
+    print(message)
+    n = input()
+    exit()
 
 def getanimename(start_url):
     temp = start_url.split("/")
@@ -37,9 +44,7 @@ def connection(url):
         soup = BeautifulSoup(site.content,'html5lib')
         return soup
     except Exception as e:
-        print("Cannot reach site :( ")
-        print(e)
-        exit()
+        error("Cannot reach site :( ")
 
 def tobedownloaded(url,l,r):
     ep = url.split('-')
@@ -58,8 +63,8 @@ def getAllepisodes(url,l,r):
     try:
         episodeUL = (soup.find('h3', class_="list_episdoe")).find_next('ul').findAll("a")
     except Exception:
-        print("Something was not right :(")
-        exit()
+        error("Something was not right :(")
+        
     episodes = []  # to be downloaded episodes
     for link in episodeUL:
         res = tobedownloaded(link['href'],l,r)
@@ -90,8 +95,7 @@ def realDownloadLinks(url,episodes):
         chrome_options.add_argument("--log-level=3")
         driver = webdriver.Chrome(options=chrome_options)
     except Exception as e:
-        print("Update your chrome driver with the Google Chrome version")
-        exit()
+        error("Update your chrome driver with the Google Chrome version")
 
     print("Preparing Download . . . Wait . . this might take time \n")
     for ep in episodes:
@@ -206,8 +210,13 @@ def into():
 
 def main():
     into()
-    print("\n ** Curse Saransh Pushkar , if doesnt work **\n")
-    print(" ** Follow the link >>>> ",baseurl,"\n ** Search the anime\n ** Copy the url and paste below :")
+    try:
+        chromedriver_autoinstaller.install(cwd=True)
+    except :
+        error("Chrome webdriver problem")
+
+    print("\n ** Put together by Saransh Pushkar**\n")
+    print(" ** Follow the link on Google Chrome >>>> ",baseurl,"\n ** Search the anime\n ** Copy the url and paste below :")
     start_url = input()
     if checkurl(start_url):
         print("")
@@ -220,18 +229,15 @@ def main():
             episodes = getPlayerLinks(start_url,l,r)
             realDownloadLinks(start_url,episodes)
             download(episodes,start_url)
+            error("\nDone.\n")
         except Exception as e:
-            print(e)
-            print("Error")
+            error(e)
     else :
-        print("Invalid URL")
+        error("Invalid URL")
 
-    x=input()
     
 
 if __name__ == "__main__":
     main()
 
-
-    
-                                                                                                                  
+                                                                                                             
