@@ -215,7 +215,7 @@ def main():
     except :
         error("Chrome webdriver problem")
 
-    print("\n ** Put together by Saransh Pushkar**\n")
+    print("\n ** Dev by Saransh Pushkar**\n")
     print(" ** Follow the link >>>> ",baseurl,"\n ** Search the anime\n ** Copy the url and paste below :")
     start_url = input()
     if checkurl(start_url):
