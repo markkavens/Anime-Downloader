@@ -216,7 +216,7 @@ def main():
         error("Chrome webdriver problem")
 
     print("\n ** Put together by Saransh Pushkar**\n")
-    print(" ** Follow the link on Google Chrome >>>> ",baseurl,"\n ** Search the anime\n ** Copy the url and paste below :")
+    print(" ** Follow the link >>>> ",baseurl,"\n ** Search the anime\n ** Copy the url and paste below :")
     start_url = input()
     if checkurl(start_url):
         print("")
@@ -240,4 +240,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-                                                                                                             
+
+    
+                                                                                                                  
